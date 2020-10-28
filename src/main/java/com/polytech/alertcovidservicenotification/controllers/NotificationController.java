@@ -1,5 +1,6 @@
 package com.polytech.alertcovidservicenotification.controllers;
 
+import com.polytech.alertcovidservicenotification.models.ContactLocationRepository;
 import com.polytech.alertcovidservicenotification.models.MailSender;
 import com.polytech.alertcovidservicenotification.models.User;
 import com.polytech.alertcovidservicenotification.models.UserRepository;
@@ -11,6 +12,7 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -20,14 +22,27 @@ import java.util.Properties;
 public class NotificationController {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ContactLocationRepository contactLocationRepository;
+
+    @GetMapping
+    public String caca(){
+        return "CACA";
+    }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public String sendEmail(@RequestBody final List<Long> users){
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean sendEmail(@RequestBody final List<Long> users){
         users.forEach(id_user -> {
             if(!userRepository.findById(id_user).isEmpty()){
                 try {
-                    MailSender.getInstance().sendmail(userRepository.getOne(id_user).getEmail());
+                    var user = userRepository.getOne(id_user);
+                    var contactLocation = contactLocationRepository.getLastLocationHistory(id_user);
+                    if(contactLocation != null){
+                        var location =  contactLocation.getLongitude()+","+contactLocation.getLatitude();
+                        var date = (String) new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm:ss").format(contactLocation.getDate());
+                        MailSender.getInstance().sendmail(user.getEmail(),user.getFirstname(),location,date);
+                    }
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -35,7 +50,7 @@ public class NotificationController {
                 }
             }
         });
-        return "Mail send";
+        return true;
     }
 
 }

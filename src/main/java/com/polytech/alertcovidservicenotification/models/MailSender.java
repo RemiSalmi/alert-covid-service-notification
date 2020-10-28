@@ -9,16 +9,17 @@ import java.util.Properties;
 public class MailSender {
     private static MailSender instance = null;
 
-    private MailSender(){}
+    private MailSender() {
+    }
 
-    public static MailSender getInstance(){
-        if(instance == null){
+    public static MailSender getInstance() {
+        if (instance == null) {
             instance = new MailSender();
         }
         return instance;
     }
 
-    public void sendmail(String to) throws AddressException, MessagingException, IOException {
+    public void sendmail(String to, String username, String location, String date) throws AddressException, MessagingException, IOException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -36,15 +37,13 @@ public class MailSender {
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
         msg.setSubject("Alerte Cas Contact!");
-        msg.setContent("<h2 style='color:red'>Vous êtes potentiellement cas contact!</h2>" +
-                        "<p>Nous avons detecté que vous aviez potentiellement été en contact avec une personne qui a été dépisté postive au Covid-19!</p>" +
-                        "Veuillez mettre en place les mesures de sécurité ci-joint afin de limiter les risques de propagation et de contamination",
-                "text/html");
         msg.setSentDate(new Date());
 
         MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setContent("<h2 style='color:red'>Vous êtes potentiellement cas contact!</h2>" +
-                        "<p>Nous avons detecté que vous aviez potentiellement été en contact avec une personne qui a été dépisté postive au Covid-19!</p>" +
+        messageBodyPart.setContent("<h2 style='color:red'>Vous êtes cas contact!</h2>" +
+                        "<p>Bonjour " + username + ",</p>" +
+                        "<p>Nous avons detecté que vous aviez potentiellement été en contact avec une personne qui a été dépisté postive au Covid-19 à la date suivante: " + date + "</p>" +
+                        "<p>Le lieu où vous avez pu croiser la personne contaminé est le suivant : https://google.com/maps/place/" + location + "</p>" +
                         "Veuillez mettre en place les mesures de sécurité ci-jointes afin de limiter les risques de propagation et de contamination!",
                 "text/html");
 

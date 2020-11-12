@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -26,8 +27,7 @@ public class NotificationController {
     private ContactLocationRepository contactLocationRepository;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Boolean sendEmail(@RequestBody final List<Long> users){
+    public Boolean sendEmail(@RequestBody final List<Long> users, HttpServletResponse response){
         users.forEach(id_user -> {
             if(!userRepository.findById(id_user).isEmpty()){
                 try {
@@ -40,11 +40,14 @@ public class NotificationController {
                     }
                 } catch (MessagingException e) {
                     e.printStackTrace();
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
             }
         });
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return true;
     }
 

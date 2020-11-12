@@ -25,11 +25,6 @@ public class NotificationController {
     @Autowired
     private ContactLocationRepository contactLocationRepository;
 
-    @GetMapping
-    public String caca(){
-        return "CACA";
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public Boolean sendEmail(@RequestBody final List<Long> users){

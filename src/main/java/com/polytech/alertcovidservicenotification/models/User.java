@@ -12,7 +12,6 @@ public class User {
     private String lastname;
     private String email;
     private String phone;
-    private String password;
 
     public long getId_user() {
         return id_user;
@@ -54,11 +53,4 @@ public class User {
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

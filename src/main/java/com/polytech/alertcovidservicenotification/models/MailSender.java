@@ -44,15 +44,12 @@ public class MailSender {
                         "<p>Bonjour " + username + ",</p>" +
                         "<p>Nous avons detecté que vous aviez potentiellement été en contact avec une personne qui a été dépisté postive au Covid-19 à la date suivante: " + date + "</p>" +
                         "<p>Le lieu où vous avez pu croiser la personne contaminé est le suivant : https://google.com/maps/place/" + location + "</p>" +
-                        "Veuillez mettre en place les mesures de sécurité ci-jointes afin de limiter les risques de propagation et de contamination!",
+                        "Veuillez mettre en place les mesures de sécurité que vous trouverez dans le lien ci-dessous afin de limiter les risques de propagation et de contamination!</p>" +
+                        "<p><a href='https://solidarites-sante.gouv.fr/IMG/pdf/fiche_personne_contact.pdf'>Mesures sanitaires du gouvernement</a>",
                 "text/html");
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
-        MimeBodyPart attachPart = new MimeBodyPart();
-        var dir = System.getProperty("user.dir") + "/src/main/resources/files/fiche_personne_contact.pdf";
-        attachPart.attachFile(dir);
-        multipart.addBodyPart(attachPart);
         msg.setContent(multipart);
         Transport.send(msg);
     }

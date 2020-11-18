@@ -34,7 +34,7 @@ public class NotificationController {
                     var user = userRepository.getOne(id_user);
                     var contactLocation = contactLocationRepository.getLastLocationHistory(id_user);
                     if(contactLocation != null){
-                        var location =  contactLocation.getLongitude()+","+contactLocation.getLatitude();
+                        var location =  contactLocation.getLatitude()+","+contactLocation.getLongitude();
                         var date = (String) new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm:ss").format(contactLocation.getDate());
                         MailSender.getInstance().sendmail(user.getEmail(),user.getFirstname(),location,date);
                     }
